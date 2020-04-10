@@ -12,8 +12,15 @@ app.config.from_pyfile('settings.py')
 app.jinja_env.trim_blocks = True
 app.jinja_env.lstrip_blocks = True
 
-db = SQLAlchemy(app)
-bootstrap = Bootstrap(app)
-moment = Moment(app)
+db = SQLAlchemy()
+bootstrap = Bootstrap()
+moment = Moment()
+
+def create_app():
+    db.init_app(app)
+    bootstrap.init_app(app)
+    moment.init_app(app)
+
+    return app
 
 from sayhello import views, errors, commands

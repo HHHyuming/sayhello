@@ -16,6 +16,7 @@ from sayhello.commands import forge, initdb
 
 class SayHelloTestCase(unittest.TestCase):
 
+
     def setUp(self):
         app.config.update(
             TESTING=True,
@@ -26,6 +27,16 @@ class SayHelloTestCase(unittest.TestCase):
         self.client = app.test_client()
 
         self.runner = app.test_cli_runner()
+
+        from flask import Flask
+        print(app.app_context().__dict__)
+        context = app.test_request_context()
+        set1 = context.__dict__.keys()
+        print(context.__dict__)
+        context.push()
+        set2 = context.__dict__.keys()
+        print(context.__dict__)
+        print(set2 - set1)
 
     def tearDown(self):
         db.session.remove()
@@ -52,6 +63,7 @@ class SayHelloTestCase(unittest.TestCase):
 
         response = self.client.get('/500')
         data = response.get_data(as_text=True)
+
         self.assertEqual(response.status_code, 500)
         self.assertIn('500 Error', data)
         self.assertIn('Go Back', data)
@@ -59,6 +71,7 @@ class SayHelloTestCase(unittest.TestCase):
     def test_index_page(self):
         response = self.client.get('/')
         data = response.get_data(as_text=True)
+        print(data)
         self.assertIn('Say Hello', data)
 
     def test_create_message(self):
